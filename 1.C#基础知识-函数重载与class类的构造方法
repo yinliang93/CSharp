@@ -1,0 +1,34 @@
+static void Main(string[] args) {
+
+            // 1.创建一个Person对象,然后给他的属性赋值,在调用他的方法
+            Person person1 = new Person();
+            person1.name = "李明";
+            person1.age = 13;
+            Console.WriteLine(person1.sayHello());
+
+            // 2.创建一个Person对象,直接使用对象初始化器,在内里面直接给他的属性赋值
+            Person person2 = new Person() {
+                name = "詹三",
+                age=15,
+            };
+            Console.WriteLine(person2.sayHello());
+
+            // 3. 采用对象构造方法直接传参,构造方法与普通方法一样可以重载,构造方法与类名同名,这样在使用的时候比前两者更方便
+            Person person3 = new Person("刘凯",18);
+            Console.WriteLine(person3.sayHello());
+
+            Console.Read();
+        }
+
+        public class Person {
+            public string name { get; set; }
+            public int age { get; set; }
+            public Person() { }
+            public Person(string n ,int a) {
+                name = n;
+                age = a;
+            }
+            public string sayHello() {
+                return $"你好!{name},你今年{age}岁了";
+            }
+        }
