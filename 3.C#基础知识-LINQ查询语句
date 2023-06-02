@@ -47,6 +47,7 @@ namespace LINQ查询语法 {
 
 
             // 3.分组: 把名字为  2个字的-3个字的-4个字的 分组显示
+            //这里要遍历2次,第一次是分组, 第二次是组里面的内容
             // var result2 = tests.GroupBy(s => s.name.Length).Select(s => s);  //查询方法
 
             /*var result2 = from stu in tests
