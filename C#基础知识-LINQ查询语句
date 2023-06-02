@@ -1,0 +1,100 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LINQ查询语法 {
+    internal class Program {
+        static void Main(string[] args) {
+            List<Student> tests = new List<Student>();
+            #region 填充数据
+            Random random = new Random();
+
+            tests.Add(new Student("詹三", 35) {
+                source = new List<int>() { 88, 99, 98 }
+            });
+            tests.Add(new Student("李琦", 18) {
+                source = new List<int>() { 70, 90, 98 }
+            });
+            tests.Add(new Student("周丽华", 20) {
+                source = new List<int>() { 60, 99, 50 }
+            });
+
+            tests.Add(new Student("欧阳雨燕", 32) {
+                source = new List<int>() { 80, 90, 100 }
+            });
+
+            tests.Add(new Student("姬熠林", 58) {
+                source = new List<int>() { 60, 85, 20 }
+            });
+            tests.Add(new Student("咎寒琼", 25) {
+                source = new List<int>() { 60, 50, 100 }
+            });
+
+            #endregion
+
+            // 4. 排序 根据年龄或者名字排序 1. OrderBy升序   2.OrderByDescending 降序
+            var result3 = tests.OrderByDescending(x => x.age /*x.name.Length*/ ).Select(x => new {
+                NewName = x.name,
+                NewAge = x.age,
+                // title = "按名字长度排序",
+                title = "按年龄大小排序",
+            });
+
+
+            foreach (var item in result3) {
+                Console.WriteLine(item.title + "... " + item.NewName + " 年龄:" + item.NewAge);
+            }
+
+
+            // 3.分组: 把名字为  2个字的-3个字的-4个字的 分组显示
+            // var result2 = tests.GroupBy(s => s.name.Length).Select(s => s);  //查询方法
+
+            /*var result2 = from stu in tests
+                          group stu by stu.name.Length into stu
+                          select stu;*/ // 查询语句
+
+            //foreach (var item in result2) {
+            //    //Console.WriteLine(item.Key);
+            //    foreach (var item2 in item) {
+            //        Console.WriteLine("名字是 "+ item.Key+"个字的 >>> "+ item2.name);
+            //    }
+            //}
+
+
+            // 2. 筛选出成绩平均数大于80的 ; 使用Sum()函数计算出总数,在计算出平均数是否大于80;
+            //使用new关键字新建一个匿名对象,返回名字和平均分
+            /*var result1 = tests.Where(x =>           
+             x.source.Sum() / x.source.Count > 80
+            ).Select(x => new {
+                Newname = x.name,
+                NewSource = Convert.ToInt32(x.source.Sum() / x.source.Count),
+            }); 
+
+            foreach (var item in result1) {
+                Console.WriteLine(item.Newname + $"平均成绩是:{item.NewSource}");
+            }*/
+
+
+
+            // 1. 筛选出名字长度大于2的,tests.Where(x => x.name.Length > 2),
+            //解释成遍历tests集合里面的数据,x==Student ; x.name.Length > 2
+            /*var result = tests.Where(x => x.name.Length > 2).Select(x => x);
+            foreach (var item in result) {
+                Console.WriteLine(item.name);
+            }*/
+
+            Console.Read();
+        }
+
+        public class Student {
+            public Student() { }
+            public Student(string n, int a) {
+                name = n;
+                age = a;
+            }
+            public string name { get; set; }
+            public int age { get; set; }
+            public List<int> source = new List<int>();
+        }
+    }
+}
