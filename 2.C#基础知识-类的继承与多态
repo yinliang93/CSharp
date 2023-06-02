@@ -1,0 +1,101 @@
+static void Main(string[] args) {
+
+            Cat cat1 = new Cat() { age = 10, name = "小花", color = "黄色" };
+            Cat cat2 = new Cat() { age = 8, name = "小白", color = "白色" };
+
+            Dog dog1 = new Dog() { color = "黑色", age = 5, name = "小黑" };
+            Dog dog2 = new Dog() { color = "白色", age = 4, name = "小白" };
+           
+            //调用Cat类从写的的Equals方法;判断宠物名字是否相等的
+            Console.WriteLine("cat1与cat2是否相等=>" + cat1.Equals(cat2));
+            Console.WriteLine("dog2与cat2是否相等=>" + cat2.Equals(dog2));
+
+            cat1.SayHello();
+            cat2.Like();
+            cat1.Test();//测试覆盖方法
+
+            dog1.Like();
+            dog1.SayHello();
+            dog1.Test();
+            Console.WriteLine(dog2.ToString());//调用从写的tostring方法
+
+            //.当一个方法需要一个父类参数时,可以直接以子类为参数传递过去,一个父类可以有多个子类,当调用其对应的方法时会自动转到子类方法
+            List<宠物类> ZooList = new List<宠物类>() {
+            cat1,cat2,dog1,dog2
+            };
+            foreach (var item in ZooList) {
+                Console.Write( "多态调用子类方法:" );
+                item.SayHello();
+            }
+            Console.Read();
+        }
+        
+/////////////////////////////////////宠物类////////////////////////////////////////////////
+
+ public abstract class 宠物类 {
+        public string name = string.Empty;
+        public int age = 0;
+        public string color = string.Empty;
+
+        //定义一个抽象方法,抽象方法不能有方法体,子类如果继承此对象必须使用override从写该方法
+        public abstract void Like();
+
+        //定义一个虚方法,虚方法要有方法体,父类要先写出该方法,子类可以选择是否从写;如不从写,则默认调用的是父类的方法
+        public virtual void SayHello() {
+            Console.WriteLine($"大家好,我叫:{name},今年:{age}岁了");
+        }
+        public void Test() {
+            Console.WriteLine("测试覆盖方法New");
+        }
+    }
+    /// <summary>
+    /// 子类如果继承的父类是一个抽象类,则必须完成父类所有定义的抽象方法
+    /// </summary>
+    public class Cat : 宠物类 {
+        //从写父类的Like()方法
+        public override void Like() {
+            Console.WriteLine("我是猫咪,我喜欢吃鱼!");
+        }
+       
+        public override void SayHello() {
+            Console.WriteLine($"大家好,我叫:{name},今年:{age}岁了,我最喜欢的颜色是:{color}");
+        }
+
+        //从写object的Equals方法,所有的对象都拥有该方法,
+        /// <summary>
+        /// 把参数object类型强制转化成父类对象,对比两个对象的名字是否一样
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj) {
+            宠物类 宠物 = obj as 宠物类;
+            return this.name == 宠物.name;
+        }
+        public override int GetHashCode() { return 0; }
+
+    }
+
+
+    public class Dog : 宠物类 {
+
+        //子类从写父类的Like()方法
+        public override void Like() {
+            Console.WriteLine("我是小狗,我喜欢吃排骨!");
+        }
+        //父类的虚方法,子类中可以不从写
+        /*  public override void SayHello() {
+           Console.WriteLine($"大家好,我叫:{name},今年:{age}岁了,我最喜欢的颜色是:{color}");
+       }*/
+
+        //从写object的tostring方法,所有的对象都拥有该方法,
+        //如果调用该方法的对象不是值类型或者字符串类型, 那么这个方法指向的是命名控件的类型
+        public override string ToString() {
+            return "我是小狗,我喜欢吃排骨!" +
+                $"我叫:{name},今年:{age}岁了,我最喜欢的颜色是:{color}";
+        }
+        //声明了一个与父类同名的函数方法,使用new关键字覆盖了该方法:
+        public new void Test() {
+            Console.WriteLine($"我叫:{name}"+ "我覆盖了父类的方法Test()函数");
+        }
+
+    }
