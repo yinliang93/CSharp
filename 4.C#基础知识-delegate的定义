@@ -1,0 +1,35 @@
+using System;
+/* 委托是一种全新的面向对象的语言特性,运行在,.NET平台
+ * 基于委托开发事件驱动程序变得非常简单
+ * 委托可以使多线程大大简化
+ * ----委托可以看成是一种数据类型,可以定义变量,它是一种特殊的变量
+ * 委托定义的变量只能接收一个函数方法,委托可以理解成函数指针
+ */
+ //委托的5个步骤
+namespace _4_C_基础知识_delegate委托 {
+    internal class Program {
+        static void Main(string[] args) {
+            // 3.创建委托对象,关联具体的方法
+            MyDelegate myDelegate1 = new MyDelegate(Add);
+            // 4.调用委托方法
+            int i = myDelegate1(20, 10);
+            Console.WriteLine( "a + b = " + i);
+            myDelegate1 -= Add; //断开这个委托关联的方法
+            // 5.委托调用的方法可以动态变化
+            myDelegate1 += Sub; //重新关联一个新的函数方法
+            int i2 = myDelegate1(20, 10);
+            Console.WriteLine("a - b = " + i2);
+            Console.Read();
+        }
+        // 2.根据委托定义一个具体的方法,实现他的功能
+        private static int Add(int a, int b) {
+            return a + b;
+        }
+        private static int Sub(int a, int b) {
+            return a - b;
+        }
+
+    }
+    // 1.声明委托,委托一般声明在外部 => (定义一个方法的原型 : 返回值+参数类型及个数)
+    public delegate int MyDelegate(int a, int b);
+}
