@@ -1,0 +1,53 @@
+using System;
+using System.Windows.Forms;
+/*    实现主窗体与子窗体之间的来回通信   */
+         
+namespace _7.委托与Event {
+   
+    public delegate void EventDelegate(string mes); // 1.定义一个委托,委托声明在外部
+    public partial class Form1 : Form {
+        // 2.再定义一个主窗体的事件委托,用来发送消息给子窗体,同时也要给子窗体定义事件委托
+        public event EventDelegate SendEvent; 
+
+        public Form1() {
+            InitializeComponent();
+            FrmSon1 frmSon1 = new FrmSon1();
+            FrmSon2 frmSon2 = new FrmSon2();
+
+            // 4.给子窗体的event事件绑定主窗体的响应函数
+            frmSon1.SendMes += new EventDelegate(ResponseMes);
+            frmSon2.SendMes += new EventDelegate(ResponseMes);
+
+            // 5.给主窗体的event事件绑定子窗体的响应函数
+            SendEvent += new EventDelegate(frmSon1.ResponseEvent);
+            SendEvent += new EventDelegate(frmSon2.ResponseEvent);
+            frmSon1.Show();
+            frmSon2.Show();
+        }
+
+        // 主窗体发送消息,激发事件
+        private void button1_Click(object sender, EventArgs e) {
+            SendEvent(textBox1.Text);
+        }
+
+        // 主窗体接收子窗体发送来的消息
+        private void ResponseMes(string str) {
+            textBox2.AppendText(str + "\r\n");
+        }
+
+
+    }
+}
+//---------------------------子窗体代码--------------
+        // 2.根据委托定义一个事件
+        public event EventDelegate SendMes;
+
+        // 3.编写与主窗体响应事件的函数
+        public void ResponseEvent(string str) {
+            textBox2.AppendText("主窗体消息:" + str + "\r\n");
+            SendMes("FrmSon2发送消息: 哎呀!!" + str);
+        }
+        // 向主窗体发送消息
+        private void button1_Click(object sender, EventArgs e) {
+            SendMes("FrmSon2发送消息:" + textBox1.Text);
+        }
