@@ -1,0 +1,38 @@
+using System;
+
+namespace _8.C_基础知识_自定义泛型委托 {
+    //1.在类的外部声明委托,一个泛型T的委托,参数类型为泛型,返回值也是泛型
+    public delegate T MyDlgt<T>(T parm1, T parm2);
+
+    internal class Program {
+
+        static void Main(string[] args) {
+            // 2.使用委托
+            MyDlgt<int> dlgt1 = Add;
+            MyDlgt<double> dlgt2 = Sub;
+            Console.WriteLine(dlgt1(20, 10));
+            Console.WriteLine(dlgt2(20, 10));
+
+            Console.WriteLine("-------使用匿名委托--------");
+            MyDlgt<int> dlgt3 = delegate (int a, int b) { return a + b; };
+            MyDlgt<double> dlgt4 = delegate (double a, double b) { return a - b; };
+            Console.WriteLine(dlgt3(20,10));
+            Console.WriteLine(dlgt4(20,10));
+
+            Console.WriteLine("-------使用lambda表达式--------");
+            MyDlgt<int> dlgt5 = (a, b) => a + b;
+            MyDlgt<double> dlgt6 = (a, b) => a - b;
+            Console.WriteLine(dlgt5(20,10));
+            Console.WriteLine(dlgt6(20,10));
+
+            Console.Read();
+        }
+
+        private static int Add(int a, int b) {
+            return a + b;
+        }
+        private static double Sub(double a, double b) {
+            return a - b;
+        }
+    }
+}
