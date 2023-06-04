@@ -1,0 +1,70 @@
+using System;
+using System.Runtime.InteropServices;
+
+/*  1.    使用Fun委托编写一个方法,从指定位子抽取3个数,求和/求积
+ *      Fun委托要求方法必须有一个返回值,参数的最后一个就是返回值
+ *      Func<T,T,T,T, out T>;无论有多少个参数最后一个都作为返回值返回,共16个参数重载
+ *   2.Action<T,T,T>委托与func类似,但是他是一个没有返回值的委托; 共14个参数重载  
+ *      
+ */
+namespace Fun委托的使用 {
+    internal class Program {
+        static void Main(string[] args) {
+            int[] nums = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+            Console.WriteLine("和:" + GetNum(nums, 0, 3));
+            Console.WriteLine("积:" + GetMulti(nums, 0, 3));
+
+            Console.WriteLine("-------------------\r\n");
+
+            Console.WriteLine(ConmmonMethod(Add, nums, 0, 3));
+            Console.WriteLine(ConmmonMethod(Multi, nums, 0, 3));
+
+            Console.WriteLine("-------------------\r\n");
+
+            Console.WriteLine(ConmmonMethod((a, b) => a + b, nums, 0, 3));
+            Console.WriteLine(ConmmonMethod((a, b) => a * b, nums, 0, 3));
+            Console.WriteLine("-------------------\r\n");
+            Action<string> action = str => Console.WriteLine("{0}这个是Action<T>委托",str);
+            action("我来调用Action委托 >>> ");
+
+            Console.Read();
+        }
+
+        #region A. 普通的实现过程
+        static int GetNum(int[] nums, int form, int len) {
+            int result = 0;
+            for (int i = form ; i <= len ; i++) {
+                result += nums[i];
+            }
+            return result;
+        }
+        static int GetMulti(int[] nums, int form, int len) {
+            int result = 1;
+            for (int i = form ; i <= len ; i++) {
+                result *= nums[i];
+            }
+            return result;
+        }
+        #endregion
+
+        #region B. 使用Fun委托实现过程,将运算符本身作为方法参数
+
+        static int ConmmonMethod(Func<int, int, int> operation, int[] nums, int form, int len) {
+            int result = nums[form];
+            for (int i = form + 1 ; i <= len ; i++) {
+                result = operation(result, nums[i]);
+            }
+            return result;
+        }
+        // 根 据 委托定义2个方法
+        static int Add(int a, int b) {
+            return a + b;
+        }
+        static int Multi(int a, int b) {
+            return a * b;
+        }
+        #endregion
+
+
+    }
+}
