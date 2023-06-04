@@ -1,0 +1,58 @@
+using System;
+using System.Threading;
+using System.Windows.Forms;
+/* 进程: 一个正在运行的程序就是一个进程,系统根据进程分配各种系统资源
+ * 线程: 系统为了提高效率会将一个进程分成若干个线程,并按照线程类分配CPU执行时间
+ * 线程特点: 在具有多个CPU的计算机中可以并行执行
+ *  Thread类:表示托管线程,每个Thread对象都代表一个托管线程,每个托管线程对用一个函数 
+ */
+
+namespace _11.C_基础知识_Thread多线程类 {
+    public partial class Form1 : Form {
+        public Form1() {
+            InitializeComponent();
+          //  Control.CheckForIllegalCrossThreadCalls = false;
+        }
+
+        private void button1_Click(object sender, EventArgs e) {
+            int a = 1;
+            Thread thread1 = new Thread(() => {
+                for (int i = 0 ; i < 10 ; i++) {
+                    Console.WriteLine("任务线程1 >>>>" + a + i);
+                    Thread.Sleep(500);
+                }
+            }) { IsBackground = true }; //通常都要设置成后台线程
+            thread1.Start();
+        }
+
+        private void button2_Click(object sender, EventArgs e) {
+            Thread thread2 = new Thread(delegate () {
+                for (int i = 1 ; i < 20 ; i++) {
+                    Console.WriteLine("任务线程2 >>>>" + i * i+"----------");
+                    Thread.Sleep(100);
+                }
+            }) { IsBackground = true };
+            thread2.Start();
+        }
+        
+        private void button3_Click(object sender, EventArgs e) {
+            int a = 1;
+            Thread thread1 = new Thread(() => {
+                for (int i = 0 ; i < 30 ; i++) {
+                    // label1.Text = "任务线程3 >>>>" + a + i; //:“线程间操作无效: 从不是创建控件“label1”的线程访问它。”
+                    /* 线程中不允许直接操作控件,如果非要操作 第一种:必须在窗口创建前声明 Control.CheckForIllegalCrossThreadCalls = false;
+                     * 第二种:使用Invoke委托
+                     */
+                    if (label1.InvokeRequired) { //判断该线程操作此控件时是否必须调用Invoke方法
+                        Action<string> action = str => label1.Text = str;
+                        label1.Invoke(action,i.ToString());
+
+                    }
+
+                        Thread.Sleep(100);
+                }
+            }) { IsBackground = true }; //通常都要设置成后台线程
+            thread1.Start();
+        }
+    }
+}
